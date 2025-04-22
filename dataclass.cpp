@@ -1,3 +1,4 @@
+// dataclass.cpp
 #include "dataclass.h"
 #include <QStringList>
 #include <QDebug>
@@ -12,8 +13,18 @@ DataClass::~DataClass()
 
 }
 
+bool DataClass::canPigeonsReachDestination(const single_RW& rw, const single_ZD& zd)
+{
+    double dx = rw.destinationCoordinate.x() - zd.releaseLocationCoordinate.x();
+    double dy = rw.destinationCoordinate.y() - zd.releaseLocationCoordinate.y();
+    double distance = std::sqrt(dx * dx + dy * dy);
+    return distance <= rw.flightDistance;
+}
+
 void DataClass::genTestData()
 {
+    DataClass data;
+
     // 生成5个不同目的地坐标（C++98兼容方式）
     QList<QPointF> destinations;
     destinations.append(QPointF(116.4074, 39.9042));   // 北京
@@ -38,35 +49,37 @@ void DataClass::genTestData()
     categories1.append("TypeE");
 
     for(int i = 0; i < 20; i++){
-        single_RW rw;
+        DataClass::single_RW rw;
         rw.pigeonCategory0 = categories0[qrand() % 5];
         rw.pigeonCategory1 = categories1[qrand() % 5];
         rw.pigeonQuantity = qrand() % 3 + 1; // 1 - 3只
         rw.destinationCoordinate = destinations[qrand() % 5];
-        rwList.append(rw);
+        rw.flightDistance = 100 + qrand() % 200; // 生成100 - 300的飞行距离
+        data.rwList.append(rw);
     }
 
-    // 2. 生成36辆货车
+    // 2. 生成36辆货车（代码保持不变）
     for(int i = 0; i < 36; i++){
-        single_HC hc;
-        single_RW& randomRW = rwList[qrand() % 20]; // 关键修改
-        hc.hcId = QString("dy%1").arg(i+1);
+        DataClass::single_HC hc;
+
+        // 显式指定引用类型
+        DataClass::single_RW& randomRW = data.rwList[qrand() % 20]; // 关键修改
+
         hc.transportedPigeonTypes0 = randomRW.pigeonCategory0;
         hc.transportedPigeonTypes1 = randomRW.pigeonCategory1;
         hc.transportedPigeonQuantity = 3;
         hc.truckStartingPosition = QPointF(115.0 + (qrand() % 50) / 100.0, 35.0 + (qrand() % 50) / 100.0);
-        hc.isAssigned = false; // 初始化为未分配任务
-        hcList.append(hc);
+        data.hcList.append(hc);
     }
 
-    // 3. 生成1500个放飞地点
+    // 3. 生成1500个放飞地点（代码保持不变）
     QStringList regions;
     regions.append("Reg1");
     regions.append("Reg2");
     regions.append("Reg3");
 
     for(int i = 0; i < 1500; i++){
-        single_ZD zd;
+        DataClass::single_ZD zd;
         zd.releaseLocationRegion = regions[i % 3];
         if(i % 20 == 0){
             zd.releaseLocationType = "Z";
@@ -75,29 +88,22 @@ void DataClass::genTestData()
             zd.releaseLocationType = "L";
             zd.simultaneousReleaseCount = 50 + qrand() % 21;
         }
-        zd.zdBh = QString("zd%1").arg(i+1);
         zd.releaseLocationCoordinate = QPointF(110.0 + (qrand() % 800) / 100.0, 20.0 + (qrand() % 500) / 100.0);
-        zd.currentReleaseCount = 0; // 初始化为0
-        zdList.append(zd);
+        data.zdList.append(zd);
     }
-    qDebug() << hcList.count();
-}
 
-void DataClass::runAlgorithm()
-{
-    // 简单的调度算法：遍历货车，为每辆货车找到合适的放飞地点
-    for (QList<single_HC>::iterator hcIt = hcList.begin(); hcIt != hcList.end(); ++hcIt) {
-        single_HC& hc = *hcIt;
-        if (hc.isAssigned) continue; // 如果货车已分配任务，跳过
-        for (QList<single_ZD>::iterator zdIt = zdList.begin(); zdIt != zdList.end(); ++zdIt) {
-            single_ZD& zd = *zdIt;
-            if (zd.currentReleaseCount + hc.transportedPigeonQuantity <= zd.simultaneousReleaseCount) {
-                // 找到合适的放飞地点，更新相关信息
-                zd.currentReleaseCount += hc.transportedPigeonQuantity;
-                hc.isAssigned = true;
-                qDebug() << QString("%1 assigned to release location:%2").arg(hc.hcId).arg(zd.zdBh) << zd.releaseLocationCoordinate;
-                break;
+    // 检查鸽子是否能够飞到目的地
+    for (QList<single_RW>::const_iterator rwIt = data.rwList.begin(); rwIt != data.rwList.end(); ++rwIt) {
+        const single_RW& rw = *rwIt;
+        for (QList<single_ZD>::const_iterator zdIt = data.zdList.begin(); zdIt != data.zdList.end(); ++zdIt) {
+            const single_ZD& zd = *zdIt;
+            if (data.canPigeonsReachDestination(rw, zd)) {
+                qDebug() << "Pigeons of type " << rw.pigeonCategory0 << " - " << rw.pigeonCategory1 << " can reach destination from release location.";
+            } else {
+                qDebug() << "Pigeons of type " << rw.pigeonCategory0 << " - " << rw.pigeonCategory1 << " cannot reach destination from release location.";
             }
         }
     }
+
+    qDebug() << data.hcList.count();
 }

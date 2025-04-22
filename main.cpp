@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
     // 生成测试数据并运行算法
     DataClass data;
     data.genTestData();
-    data.runAlgorithm();
 
     return a.exec();
 }
