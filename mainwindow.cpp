@@ -1,3 +1,4 @@
+// mainwindow.cpp
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dataclass.h"
@@ -9,6 +10,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    m_plotWidget = new PlotWidget(this);
+    setCentralWidget(m_plotWidget);
+
+    DataClass data;
+    data.genTestData();
+    m_plotWidget->setData(data);
 }
 
 MainWindow::~MainWindow()

@@ -15,10 +15,12 @@ CONFIG += c++11
 SOURCES += main.cpp\
         mainwindow.cpp \
     algotask.cpp \
-    dataclass.cpp
+    dataclass.cpp \
+    plotwidget.cpp
 
 HEADERS  += mainwindow.h \
     algotask.h \
-    dataclass.h
+    dataclass.h \
+    plotwidget.h
 
 FORMS    += mainwindow.ui
