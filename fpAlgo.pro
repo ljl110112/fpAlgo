@@ -10,17 +10,18 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = fpAlgo
 TEMPLATE = app
-CONFIG += c++11
 
 SOURCES += main.cpp\
         mainwindow.cpp \
     algotask.cpp \
     dataclass.cpp \
-    plotwidget.cpp
+    plotwidget.cpp \
+    coordinatesystem.cpp
 
 HEADERS  += mainwindow.h \
     algotask.h \
     dataclass.h \
-    plotwidget.h
+    plotwidget.h \
+    CoordinateSystem.h
 
 FORMS    += mainwindow.ui

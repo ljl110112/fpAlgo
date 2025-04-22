@@ -4,6 +4,7 @@
 
 #include <QWidget>
 #include "dataclass.h"
+#include "coordinatesystem.h"
 
 class PlotWidget : public QWidget
 {
@@ -19,6 +20,7 @@ protected:
 
 private:
     DataClass m_data;
+    CoordinateSystem *coor;
 };
 
 #endif // PLOTWIDGET_H

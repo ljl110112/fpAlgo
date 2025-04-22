@@ -26,6 +26,7 @@ public:
 
     // 放飞任务相关信息
     struct single_RW{
+        QString rwbh;
         QString pigeonCategory0; //鸽子大类
         QString pigeonCategory1; //鸽子小类
         int pigeonQuantity; //鸽子数量
@@ -35,6 +36,7 @@ public:
 
     // 货车相关信息
     struct single_HC{
+        QString hcbh;
         QString transportedPigeonTypes0;//鸽子大类
         QString transportedPigeonTypes1;//鸽子小类
         int transportedPigeonQuantity; //鸽子数量
@@ -43,6 +45,7 @@ public:
 
     // 放飞地点相关信息
     struct single_ZD{
+        QString zdid;
         QString releaseLocationRegion;  //所属地区
         QString releaseLocationType;    //放飞地点类型
         int simultaneousReleaseCount;   //容量：同时放飞数量

@@ -4,7 +4,9 @@
 
 PlotWidget::PlotWidget(QWidget *parent) : QWidget(parent)
 {
-
+    coor = new CoordinateSystem();
+    coor->resize(900, 700);
+    coor->show();
 }
 
 PlotWidget::~PlotWidget()
@@ -64,7 +66,8 @@ void PlotWidget::paintEvent(QPaintEvent *event)
         QPointF pos = rw.destinationCoordinate;
         int x = static_cast<int>((pos.x() - minX) * scaleX);
         int y = static_cast<int>((pos.y() - minY) * scaleY);
-        painter.drawEllipse(x - 2, y - 2, 4, 4);
+//        painter.drawEllipse(x - 2, y - 2, 4, 4);
+        coor->plotPoint(pos.x(),pos.y(),rw.rwbh);
     }
 
     // 绘制货车的起始位置
@@ -75,7 +78,8 @@ void PlotWidget::paintEvent(QPaintEvent *event)
         QPointF pos = hc.truckStartingPosition;
         int x = static_cast<int>((pos.x() - minX) * scaleX);
         int y = static_cast<int>((pos.y() - minY) * scaleY);
-        painter.drawRect(x - 2, y - 2, 4, 4);
+//        painter.drawRect(x - 2, y - 2, 4, 4);
+        coor->plotPoint(pos.x(),pos.y(),hc.hcbh,Qt::green);
     }
 
     // 绘制放飞地点
@@ -86,6 +90,7 @@ void PlotWidget::paintEvent(QPaintEvent *event)
         QPointF pos = zd.releaseLocationCoordinate;
         int x = static_cast<int>((pos.x() - minX) * scaleX);
         int y = static_cast<int>((pos.y() - minY) * scaleY);
-        painter.drawEllipse(x - 2, y - 2, 4, 4);
+//        painter.drawEllipse(x - 2, y - 2, 4, 4);
+        coor->plotPoint(pos.x(),pos.y(),"",Qt::blue);
     }
 }
