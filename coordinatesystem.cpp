@@ -18,6 +18,7 @@ CoordinateSystem::CoordinateSystem(QWidget *parent)
     setDragMode(QGraphicsView::ScrollHandDrag);
 
     drawGrid();
+    drawAxes();
 }
 
 void CoordinateSystem::plotPoint(qreal x, qreal y, const QString &label, const QBrush &brush)
