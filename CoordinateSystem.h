@@ -12,10 +12,11 @@ class CoordinateSystem : public QGraphicsView {
     Q_OBJECT
 public:
     explicit CoordinateSystem(QWidget *parent = 0);
-    void plotPoint(qreal x, qreal y, const QString& label, const QBrush &brush = Qt::red);  // 新增接口
-    void plotLine(qreal x1, qreal y1, qreal x2, qreal y2, const QString& label); // 新增线段接口
-    double calculateDistance(qreal x1, qreal y1, qreal x2, qreal y2) const;  // 新增计算接口
+    void plotPoint(qreal lat, qreal lon, const QString& label, const QBrush &brush = Qt::red);  // 新增接口
+    void plotLine(qreal lat1, qreal lon1, qreal lat2, qreal lon2, const QString& label); // 新增线段接口
+    double calculateDistance(qreal lat1, qreal lon1, qreal lat2, qreal lon2) const;  // 新增计算接口
 
+    QPointF latLonToMercator(qreal lon, qreal lat) const;
 private:
     QGraphicsScene *scene;
     void drawAxes();
