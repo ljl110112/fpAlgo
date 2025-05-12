@@ -15,6 +15,8 @@ public:
 
     void setData(const DataClass& data);
 
+    QPointF latLonToMercator(QPointF pos) const;
+    QList<QPointF> transformCoordinates(const QList<QPointF> &originalCoordinates);
 protected:
     void paintEvent(QPaintEvent *event);
 

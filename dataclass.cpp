@@ -53,7 +53,7 @@ void DataClass::genTestData()
         rw.pigeonCategory1 = categories1[qrand() % 5];
         rw.pigeonQuantity = qrand() % 3 + 1; // 1 - 3只
         rw.destinationCoordinate = destinations[qrand() % 5];
-        rw.flightDistance = 100 + qrand() % 200; // 生成100 - 300的飞行距离
+        rw.flightDistance = 3000 + qrand() % 200; // 生成100 - 300的飞行距离
         rw.rwbh = QString("rw%1").arg(i+1);
         rwList.append(rw);
     }

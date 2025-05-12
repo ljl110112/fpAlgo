@@ -21,22 +21,15 @@ CoordinateSystem::CoordinateSystem(QWidget *parent)
     drawAxes();
 }
 
-// 经纬度转平面坐标（简单墨卡托投影）
-QPointF CoordinateSystem::latLonToMercator(qreal lon, qreal lat) const {
-    const double R = 6378137; // 地球半径（米）
-    double x = R * lon * M_PI / 180.0;
-    double tmp = std::tan(M_PI / 4.0 + lat * M_PI / 360.0);
-    double y = R * std::log(tmp);
-    return QPointF(x, y);
+void CoordinateSystem::setSceneRectToFitData(double minX, double maxX, double minY, double maxY)
+{
+    double padding = 10; // 边距
+    //scene->setSceneRect(minX - padding, minY - padding, maxX - minX + 2 * padding, maxY - minY + 2 * padding);
+    this->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
 }
 
-void CoordinateSystem::plotPoint(qreal lat, qreal lon, const QString &label, const QBrush &brush)
+void CoordinateSystem::plotPoint(qreal x, qreal y, const QString &label, const QBrush &brush)
 {
-    // 经纬度转平面坐标
-    QPointF pos = latLonToMercator(lat, lon);
-    qreal x = pos.x();
-    qreal y = pos.y();
-
     // 绘制点符号（红色圆形）
     QGraphicsEllipseItem *point = new QGraphicsEllipseItem(x-3, y-3, 6, 6);  // 半径3像素
     point->setBrush(brush);
@@ -48,16 +41,8 @@ void CoordinateSystem::plotPoint(qreal lat, qreal lon, const QString &label, con
     text->setDefaultTextColor(Qt::black);
 }
 
-void CoordinateSystem::plotLine(qreal lat1, qreal lon1, qreal lat2, qreal lon2, const QString &label)
+void CoordinateSystem::plotLine(qreal x1, qreal y1, qreal x2, qreal y2, const QString &label)
 {
-    // 经纬度转平面坐标
-    QPointF pos1 = latLonToMercator(lat1, lon1);
-    QPointF pos2 = latLonToMercator(lat2, lon2);
-    qreal x1 = pos1.x();
-    qreal y1 = pos1.y();
-    qreal x2 = pos2.x();
-    qreal y2 = pos2.y();
-
     // 绘制线段（绿色实线）
     QGraphicsLineItem *line = new QGraphicsLineItem(x1, y1, x2, y2);
     line->setPen(QPen(Qt::green, 2, Qt::SolidLine)); // 线宽2像素
@@ -68,16 +53,8 @@ void CoordinateSystem::plotLine(qreal lat1, qreal lon1, qreal lat2, qreal lon2, 
     qreal midY = (y1 + y2)/2 - 15;  // 上偏移15像素
 }
 
-double CoordinateSystem::calculateDistance(qreal lat1, qreal lon1, qreal lat2, qreal lon2) const
+double CoordinateSystem::calculateDistance(qreal x1, qreal y1, qreal x2, qreal y2) const
 {
-    // 经纬度转平面坐标
-    QPointF pos1 = latLonToMercator(lat1, lon1);
-    QPointF pos2 = latLonToMercator(lat2, lon2);
-    qreal x1 = pos1.x();
-    qreal y1 = pos1.y();
-    qreal x2 = pos2.x();
-    qreal y2 = pos2.y();
-
     qreal dx = x2 - x1;  // X轴坐标差
     qreal dy = y2 - y1;  // Y轴坐标差
     return sqrt(pow(dx, 2) + pow(dy, 2));  // 欧几里得距离公式
